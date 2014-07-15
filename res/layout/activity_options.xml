@@ -1,0 +1,37 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/choicestwo"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/Option1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.04"
+        android:height="48dp"
+        android:paddingTop="10dp" />
+
+    <Button
+        android:id="@+id/Option2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.69"
+        android:paddingTop="10dp" />
+
+    <Button
+        android:id="@+id/Option3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.92"
+        android:paddingTop="10dp" />
+
+    <Button
+        android:id="@+id/Option4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="fill"
+        android:layout_weight="1.09"
+        android:paddingTop="10dp" />
+
+</LinearLayout>

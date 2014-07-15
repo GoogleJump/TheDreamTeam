@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Adventi</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_choices">ChoicesActivity</string>
+    <string name="title_activity_search">SearchActivity</string>
+    
+    <string name="edit_foodsearch">Enter your food preference.</string>
+    <string name="button_send">Send</string>
+    <string name="button_search_price">Search by Price</string>
+    
+</resources>
