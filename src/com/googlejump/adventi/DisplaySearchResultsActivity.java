@@ -6,10 +6,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.googlejump.adventi.models.Destination;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,19 +32,16 @@ public class DisplaySearchResultsActivity extends ListActivity {
 	/* Used to display the search results */
 	private ListView listView;
 	/* ArrayList gets populated with restaurant names from API query */
-	private ArrayList<String> restaurantNamesArr;
-	//private ArrayList<Restaurant> restaurantResults;
+	private ArrayList<String> destinationNamesArr;
+	private ArrayList<Destination> destinationResults;
 	/* Used to attach an array to the listView */
 	private ArrayAdapter<String> adapter;
-	
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_display_search_results);
-		// Show the Up button in the action bar.
-		setupActionBar();
-		
-	//	initTypeFace();
 
 		// Show the Up button in the action bar.
 		// setupActionBar();
@@ -60,41 +60,6 @@ public class DisplaySearchResultsActivity extends ListActivity {
 		new MyAsyncTask(searchType).execute(jsonString);
 	}
 
-	/**
-	 * Set up the {@link android.app.ActionBar}, if the API is available.
-	 */
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	private void setupActionBar() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			getActionBar().setDisplayHomeAsUpEnabled(true);
-		}
-	}
-
-	/*@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.display_search_results, menu);
-		return true;
-	}*/
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			// This ID represents the Home or Up button. In the case of this
-			// activity, the Up button is shown. Use NavUtils to allow users
-			// to navigate up one level in the application structure. For
-			// more details, see the Navigation pattern on Android Design:
-			//
-			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
-			//
-			NavUtils.navigateUpFromSameTask(this);
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-	
-	
 	/* This thread takes care of parsing the search results for the info we want */
 	private class MyAsyncTask extends AsyncTask<String, Void, Void> {
 		String typeOfSearch;
@@ -105,8 +70,8 @@ public class DisplaySearchResultsActivity extends ListActivity {
 
 		@Override
 		protected Void doInBackground(String... args) {
-			restaurantNamesArr = new ArrayList<String>();
-			//restaurantResults = new ArrayList<Restaurant>();
+			destinationNamesArr = new ArrayList<String>();
+			destinationResults = new ArrayList<Destination>();
 
 			/* Info we query */
 			String name;
@@ -126,7 +91,7 @@ public class DisplaySearchResultsActivity extends ListActivity {
 
 					/*
 					 * From Yelp, we are gathering the the restaurant name,
-					 * their phone number, their address, their url,
+					 * their phone number, their address, and their url.
 					 */
 
 					// Get the root JSONObject
@@ -139,9 +104,9 @@ public class DisplaySearchResultsActivity extends ListActivity {
 					boolean isInList = false;
 					
 					for (int i = 0; i < businessList.length(); i++) {
-						for (int p = 0; p < restaurantNamesArr.size(); p++) {
+						for (int p = 0; p < destinationNamesArr.size(); p++) {
 							// Check for doubles that are already in the list
-							if ((restaurantNamesArr.get(p))
+							if ((destinationNamesArr.get(p))
 									.equals((businessList.getJSONObject(i))
 											.getString("name"))) {
 								isInList = true;
@@ -173,11 +138,11 @@ public class DisplaySearchResultsActivity extends ListActivity {
 								address = buildLoc.toString();
 							}
 
-							restaurantNamesArr.add(name);
-							/*restaurantResults.add(new Restaurant(name,
-									phoneNumber, address, null, url));*/
+							destinationNamesArr.add(name);
+							destinationResults.add(new Destination(name,
+									phoneNumber, address, null, url));
 							/*System.out.println("Adding "
-									+ restaurantNamesArr.size()
+									+ destinationNamesArr.size()
 									+ "th rest to array: " + name);
 							System.out.println("It's phone is: " + phoneNumber);
 							System.out.println("It's address is: " + address);*/
@@ -185,8 +150,8 @@ public class DisplaySearchResultsActivity extends ListActivity {
 
 					}
 
-					/*for (int i = 0; i < restaurantNamesArr.size(); i++) {
-						System.out.println(restaurantNamesArr.get(i));
+					/*for (int i = 0; i < destinationNamesArr.size(); i++) {
+						System.out.println(destinationNamesArr.get(i));
 					}*/
 
 				} catch (JSONException e) {
@@ -237,10 +202,10 @@ public class DisplaySearchResultsActivity extends ListActivity {
 
 						for (int i = 0; i < businessList.length(); i++) {
 							boolean isInList = false;
-							for (int p = 0; p < restaurantNamesArr.size(); p++) {
+							for (int p = 0; p < destinationNamesArr.size(); p++) {
 								// Check for doubles that are already in the
 								// list
-								if ((restaurantNamesArr.get(p))
+								if ((destinationNamesArr.get(p))
 										.equals((businessList.getJSONObject(i))
 												.getString("name"))) {
 									isInList = true;
@@ -256,20 +221,20 @@ public class DisplaySearchResultsActivity extends ListActivity {
 								price_level = (businessList.getJSONObject(i))
 										.getString("price_level");
 
-								restaurantNamesArr.add(name);
-								/*restaurantResults.add(new Restaurant(name,
+								destinationNamesArr.add(name);
+								destinationResults.add(new Destination(name,
 										null, address, Integer
-												.parseInt(price_level), null));*/
+												.parseInt(price_level), null));
 
 								/*System.out.println("Adding "
-										+ restaurantNamesArr.size()
+										+ destinationNamesArr.size()
 										+ "the rest to array: " + name + " at "
 										+ address);*/
 							}
 						}
 
-						/*for (int i = 0; i < restaurantNamesArr.size(); i++) {
-							System.out.println(restaurantNamesArr.get(i));
+						/*for (int i = 0; i < destinationNamesArr.size(); i++) {
+							System.out.println(destinationNamesArr.get(i));
 						}*/
 					}
 
@@ -280,7 +245,7 @@ public class DisplaySearchResultsActivity extends ListActivity {
 			}
 
 			// System.out.println("Size of the names array: " +
-			// restaurantNamesArr.size());
+			// destinationNamesArr.size());
 			return null;
 
 		}// end doInBackground
@@ -297,17 +262,17 @@ public class DisplaySearchResultsActivity extends ListActivity {
 
 			// set up ArrayAdapter to use the custom layout for each search
 			// result
-			if(restaurantNamesArr.size() == 0){
+			if(destinationNamesArr.size() == 0){
 				((TextView)findViewById(R.id.searchbypref_term)).setText("No results found.\n" +   "Please check your location services settings or search other related terms.");
 				((TextView)findViewById(R.id.searchbypref_term)).setGravity(0x01);
 				((TextView)findViewById(R.id.searchbypref_term)).setTextSize(25);
 				return;
 			}
 			
-			if (restaurantNamesArr != null) {
+			if (destinationNamesArr != null) {
 				listView.setAdapter(adapter = new ArrayAdapter<String>(
 						getApplicationContext(),
-						android.R.layout.simple_list_item_1, restaurantNamesArr) {
+						android.R.layout.simple_list_item_1, destinationNamesArr) {
 
 					@Override
 					public View getView(int position, View convertView,
@@ -318,15 +283,6 @@ public class DisplaySearchResultsActivity extends ListActivity {
 						TextView text = (TextView) view
 								.findViewById(android.R.id.text1);
 						text.setTextColor(Color.BLACK);
-						
-						/*Cindy added this to change the font
-						Typeface roboto = Typeface.createFromAsset(getAssets(),
-								"fonts/Roboto-Light.ttf");
-						text.setTypeface(roboto);
-						text.setTextColor(Color.BLACK);
-						text.setBackgroundColor(Color.WHITE);
-						
-						// end of cindy's stuff */
 
 						return view;
 					}// end getView function
@@ -336,27 +292,123 @@ public class DisplaySearchResultsActivity extends ListActivity {
 		}// end onPostExecute function
 
 	}// end internal AsyncTask class
-	
-	
-	private void initTypeFace() {
-		Typeface journal = Typeface.createFromAsset(getAssets(),
-				"fonts/journal-webfont.ttf");
-		Typeface effra = Typeface.createFromAsset(getAssets(),
-				"fonts/Effra-Regular.ttf");
 
-		Typeface sugarcube = Typeface.createFromAsset(getAssets(),
-				"fonts/SugarcubesRegular.ttf");
-		Typeface roboto = Typeface.createFromAsset(getAssets(),
-				"fonts/Roboto-Light.ttf");
-
-		TextView titleText = (TextView) findViewById(R.id.TextView01);
-		titleText.setTypeface(journal);
-		titleText.setTextSize(34);
-		
-		
-		TextView resmessage = (TextView) findViewById(R.id.searchbypref_term);
-		resmessage.setTypeface(effra);
-
+	/**
+	 * Set up the {@link android.app.ActionBar}, if the API is available.
+	 */
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	private void setupActionBar() {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			getActionBar().setDisplayHomeAsUpEnabled(true);
+		}
 	}
 
+	/*@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.display_search_results, menu);
+		return true;
+	}*/
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			// This ID represents the Home or Up button. In the case of this
+			// activity, the Up button is shown. Use NavUtils to allow users
+			// to navigate up one level in the application structure. For
+			// more details, see the Navigation pattern on Android Design:
+			//
+			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
+			//
+			NavUtils.navigateUpFromSameTask(this);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	// TODO: REFACTOR THIS METHOD
+	public void onListItemClick(ListView lv, View v, int position, long id) {
+
+		Destination restObj = destinationResults.get(position);
+		super.onListItemClick(lv, v, position, id);
+		/*System.out.println("Name of result clicked was: "
+				+ destinationNamesArr.get(position));*/
+
+		// Pop up a dialog with more info
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+		LayoutInflater inflater = this.getLayoutInflater();
+		View dialogLayout;
+		if (restObj.getPriceLevel() == null)
+			dialogLayout = inflater
+					.inflate(R.layout.dialog_search_result, null);
+		else {
+			dialogLayout = inflater
+					.inflate(R.layout.dialog_google_result, null);
+		}
+		builder.setView(dialogLayout);
+		builder.setTitle(destinationNamesArr.get(position));
+
+		// Yelp
+		if (restObj.getPriceLevel() == null) {
+
+			// address
+			if (restObj.getAddress() != null) {
+				TextView phoneView = (TextView) dialogLayout
+						.findViewById(R.id.resultPhone);
+				phoneView.setText("Phone: " + restObj.getPhoneNumber());
+			} else {
+				TextView phoneView = (TextView) dialogLayout
+						.findViewById(R.id.resultPhone);
+				phoneView.setText("Phone: Not Available");
+			}
+
+			// address
+			if (restObj.getAddress() != null) {
+				TextView addressView = (TextView) dialogLayout
+						.findViewById(R.id.resultAddress);
+				addressView.setText("Address: " + restObj.getAddress());
+			} else {
+				TextView addressView = (TextView) dialogLayout
+						.findViewById(R.id.resultAddress);
+				addressView.setText("Address: Not Available");
+			}
+
+			// url
+			if (restObj.getUrl() != null) {
+				TextView urlView = (TextView) dialogLayout
+						.findViewById(R.id.resultUrl);
+				urlView.setText("Url: " + restObj.getUrl());
+			} else {
+				TextView urlView = (TextView) dialogLayout
+						.findViewById(R.id.resultUrl);
+				urlView.setText("Url: Not Available");
+			}
+
+		} else {
+			
+			builder.setMessage("Price Scale: " + (restObj.getPriceLevel() + 1)
+					+ " dollar signs");
+
+			// address
+			if (restObj.getAddress() != null) {
+				TextView addressView = (TextView) dialogLayout
+						.findViewById(R.id.resultAddress);
+				addressView.setText("Address: " + restObj.getAddress());
+			} else {
+				TextView addressView = (TextView) dialogLayout
+						.findViewById(R.id.resultAddress);
+				addressView.setText("Address: Not Available");
+			}
+
+		}
+
+		AlertDialog dialog = builder.create();
+		dialog.show();
+	}
+	
 }
+
+
+

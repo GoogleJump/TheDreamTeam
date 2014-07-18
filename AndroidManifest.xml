@@ -36,10 +36,18 @@
         <activity
             android:name="com.googlejump.adventi.SearchActivity"
             android:label="@string/title_activity_search"
-            android:parentActivityName="com.googlejump.adventi.SearchActivity" >
+            android:parentActivityName="com.googlejump.adventi.ChoicesActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.googlejump.adventi.ChoicesActivity" />
+        </activity>
+        <activity
+            android:name="com.googlejump.adventi.DisplaySearchResultsActivity"
+            android:label="@string/title_activity_display_search_results"
+            android:parentActivityName="com.googlejump.adventi.SearchActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.googlejump.adventi.SearchActivity" />
         </activity>
         <meta-data
                 android:name="com.google.android.gms.version"
