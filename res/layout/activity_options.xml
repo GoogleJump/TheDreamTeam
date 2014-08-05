@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1.04"
         android:height="48dp"
+        android:background="@android:color/transparent"        
         android:paddingTop="10dp" />
 
     <Button
@@ -17,6 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.69"
+        android:background="@android:color/transparent"        
         android:paddingTop="10dp" />
 
     <Button
@@ -24,6 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.92"
+        android:background="@android:color/transparent"        
         android:paddingTop="10dp" />
 
     <Button
@@ -32,6 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="fill"
         android:layout_weight="1.09"
+        android:background="@android:color/transparent"        
         android:paddingTop="10dp" />
 
 </LinearLayout>

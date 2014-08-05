@@ -1,69 +1,36 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    
-    <TableLayout
-    android:id="@+id/search_title_bar_layout"
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/GridLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f7f3eb"
-    android:shrinkColumns="*"
-    android:stretchColumns="*" >
-    
-    
+    android:background="@drawable/letsgo"
+    android:columnCount="2"
+    android:orientation="horizontal" >
+
+    <EditText
+        android:id="@+id/edit_foodsearch"
+        android:layout_width="50dp"
+        android:layout_gravity="fill_horizontal"
+        android:ems="10"
+        android:hint="@string/edit_foodsearch"
+        android:textColor="#ffffff"
+        android:textSize="20sp" >
+
+        <requestFocus />
+    </EditText>
 
     <!-- Row 1 with single column -->
 
-   <TableRow
-        android:layout_width="fill_parent"
+    <Space
+        android:layout_column="1"
+        android:layout_gravity="fill_vertical"
+        android:layout_row="1" />
+
+    <Button
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal" >
+        android:layout_column="0"
+        android:layout_gravity="left|fill_vertical"
+        android:layout_row="1"
+        android:onClick="sendPrefMessage" />
 
-        <TextView
-            android:id="@+id/search_bar"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_span="2"
-            android:textSize ="20sp"
-            android:background="@drawable/banner"
-            android:textAlignment="center"
-            android:gravity="center"
-            android:text = "Search"
-            android:textColor ="#ffffff"/>
-
-    </TableRow>
-
-   <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop = "50dp"
-    android:orientation="horizontal" >
-
-    <EditText android:id="@+id/edit_foodsearch"
-        android:layout_weight="1"
-        android:layout_width="50dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/edit_foodsearch"
-        />
-    
-    <Button 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/button_send"
-        android:onClick="sendPrefMessage" 
-        
-        />
-    
-    <Button 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/button_search_price"
-        android:onClick="sendPriceMessage" 
-        
-        />
-
-</LinearLayout>
-   
- </TableLayout>
-</RelativeLayout>
+</GridLayout>

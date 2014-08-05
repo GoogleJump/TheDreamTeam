@@ -14,8 +14,38 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		Button button = (Button) findViewById(R.id.enterButton);
-		button.setOnClickListener( new View.OnClickListener() {
+		Button button1 = (Button) findViewById(R.id.button1);
+		button1.setOnClickListener( new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent launchAct = new Intent(MainActivity.this, ChoicesActivity.class);
+				startActivity(launchAct);
+			}
+		});
+		
+		Button button2 = (Button) findViewById(R.id.button2);
+		button2.setOnClickListener( new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent launchAct = new Intent(MainActivity.this, ChoicesActivity.class);
+				startActivity(launchAct);
+			}
+		});
+		
+		Button button3 = (Button) findViewById(R.id.button3);
+		button3.setOnClickListener( new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent launchAct = new Intent(MainActivity.this, ChoicesActivity.class);
+				startActivity(launchAct);
+			}
+		});
+		
+		Button button4 = (Button) findViewById(R.id.button4);
+		button4.setOnClickListener( new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
