@@ -28,7 +28,7 @@ public class WalkscoreRequest {
 	/* This thread takes care of the Walkscore API request and processing */
 	private class MyAsyncTask2 extends AsyncTask<Void, Void, Void> {
 		
-		String walkscoreResponse = "";
+		String walkscoreResponse;
 		String formattedAddress;
 		Integer walkscore = null;
 		String walkDesc = null;
@@ -44,6 +44,7 @@ public class WalkscoreRequest {
 			//For each place in destinationResults array, try to find it's walkscore
 			for(int count = 0; count < destResults.size(); count++){
 				Destination dest = destResults.get(count);
+				walkscoreResponse = "";
 				System.out.println("WalkScore API params: ");
 				System.out.println("Lat: " + dest.getLatitude());
 				System.out.println("Lng: " + dest.getLongitude());
@@ -83,15 +84,10 @@ public class WalkscoreRequest {
 		            String temp;
 		            System.out.println("About to take input");
 		            while ((temp = bReader.readLine()) != null){
-		            	System.out.println("temp: " +temp);
+		            	//System.out.println("temp: " +temp);
 		                walkscoreResponse += temp;
-		            	//result.append(temp);
 		            }
-		            
-		         //  while((temp = bReader.readLine()) != null)
-		        	//   walkscoreResponse += temp;
-		           
-		            System.out.println("No input");
+		           // System.out.println("No input");
 
 		            bReader.close();
 		            inStream.close();
@@ -115,8 +111,10 @@ public class WalkscoreRequest {
 					
 					if(Integer.parseInt(status) == 1){
 						walkscore = Integer.parseInt(jsonObject.getString("walkscore"));
+						dest.setWalkScore(walkscore);
 						System.out.println(walkscore);
 						walkDesc = jsonObject.getString("description");
+						dest.setWalkDesc(walkDesc);
 						System.out.println(walkDesc);
 					}
 					else{
