@@ -1,12 +1,30 @@
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:map="http://schemas.android.com/apk/res-auto" 
+    android:orientation="vertical">
     
+<LinearLayout 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:orientation="vertical">
+    
+    <fragment  
+          android:id="@+id/map"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:apiKey="AIzaSyCO_2gDqXgr5xgmpOim4_P0rhnTFy6fy8E"
+          class="com.google.android.gms.maps.MapFragment"/>
+</LinearLayout>  
+
     <TableLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#f7f3eb"
+    android:layout_weight = "1"
     android:shrinkColumns="*"
     android:stretchColumns="*" >
     
@@ -59,4 +77,4 @@
     
 
 </TableLayout>
-</RelativeLayout>
+</LinearLayout>

@@ -7,6 +7,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import android.location.Geocoder;
+import android.location.Address;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,12 +33,30 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 
-public class DisplaySearchResultsActivity extends ListActivity {
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.os.Bundle;
+
+import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+
+@SuppressLint("NewApi")
+public class DisplaySearchResultsActivity extends ListActivity implements LocationListener{
 
 	/* Used to display the search results */
 	private ListView listView;
@@ -45,14 +68,32 @@ public class DisplaySearchResultsActivity extends ListActivity {
 	private ArrayAdapter<String> adapter;
     private final String WS_API_KEY = "ffd1c56f9abcf84872116b4cc2dfcf31";
 
+    private double latitude;
+	private double longitude;
+
+	public AtomicInteger variable;
+
+	//map
+	GoogleMap map;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_display_search_results);
 
-		// Show the Up button in the action bar.
-		// setupActionBar();
+		LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0,this);
+		
+		//show map
+		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
+			    .getMap();
+			  // map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+			  // map.setMapType(GoogleMap.MAP_TYPE_NONE);
+			  map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+			  // map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+			  // map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+
+		variable = new AtomicInteger(0);	  
 
 		Intent intent = getIntent();
 		String message = intent
@@ -71,6 +112,79 @@ public class DisplaySearchResultsActivity extends ListActivity {
 		System.out.println("DestinationResults Size: "+ destinationResults.size());
 		new WalkscoreRequest(destinationResults);
 	}
+
+	@Override
+	public void onLocationChanged(Location location) {
+	   System.out.println("start onLocationChagned");
+	   Geocoder coder = new Geocoder(this);
+	   List<Address> address;
+	   map.clear();
+	   
+	   latitude = location.getLatitude();
+	   longitude = location.getLongitude();
+	   
+	   MarkerOptions mp = new MarkerOptions();
+	   mp.position(new LatLng(location.getLatitude(), location.getLongitude()));
+	   
+	   mp.title("my position");
+
+	   map.addMarker(mp);
+	   
+	   //wait until all data is loaded
+	   int num = 0;
+	   while (num == 0) {
+			num = variable.get();
+	   }
+	   placeMarkers(destinationResults);
+	   
+	   map.animateCamera(CameraUpdateFactory.newLatLngZoom(
+	    new LatLng(location.getLatitude(), location.getLongitude()), 16));
+	  }
+
+	 public void placeMarkers(ArrayList<Destination> dest) {
+		 Geocoder coder = new Geocoder(this);
+		 List<Address> address;
+		 
+		 for (int i = 0; i < dest.size(); i++){
+			 MarkerOptions mp = new MarkerOptions();
+			 try {
+				 address = coder.getFromLocationName((dest.get(i)).getAddress(), 1);
+				 Address loc = address.get(0);
+				 if (address.size() > 0)
+				 {
+					 mp.position(new LatLng(loc.getLatitude(), loc.getLongitude()));
+					 mp.title((dest.get(i)).getName());
+				 }
+			 } 
+			 catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			 }
+			 
+
+			 map.addMarker(mp);
+			 System.out.println("got here");
+			 
+		 }  
+	 }
+	 
+	  @Override
+	 public void onProviderDisabled(String provider) {
+	  // TODO Auto-generated method stub
+
+	  }
+
+	  @Override
+	 public void onProviderEnabled(String provider) {
+	  // TODO Auto-generated method stub
+
+	  }
+
+	  @Override
+	 public void onStatusChanged(String provider, int status, Bundle extras) {
+	  // TODO Auto-generated method stub
+
+	  }
 
 	/* This thread takes care of parsing the search results for the info we want */
 	private class MyAsyncTask extends AsyncTask<String, Void, Void> {
@@ -272,7 +386,7 @@ public class DisplaySearchResultsActivity extends ListActivity {
 					e.printStackTrace();
 				}
 			}
-
+			variable.getAndIncrement();
 			// System.out.println("Size of the names array: " +
 			// destinationNamesArr.size());
 			return null;
