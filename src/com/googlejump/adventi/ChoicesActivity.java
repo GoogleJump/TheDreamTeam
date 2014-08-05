@@ -20,11 +20,14 @@ public class ChoicesActivity extends Activity {
 		// Show the Up button in the action bar.
 		setupActionBar();
 		
+		
+		
 		Button button = (Button) findViewById(R.id.Option1);
 		button.setOnClickListener (new View.OnClickListener(){
-			public void onClick(View v) {
-		    	setContentView(R.layout.activity_search);
-		   }
+		    public void onClick(View v) {
+		    	Intent launchEatSearchAct = new Intent(ChoicesActivity.this, SearchActivity.class);
+				startActivity(launchEatSearchAct);		   
+			}
 		}); 
 
 		Button button02 = (Button) findViewById(R.id.Option2);
