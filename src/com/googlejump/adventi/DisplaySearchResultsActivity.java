@@ -1,5 +1,11 @@
 package com.googlejump.adventi;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -32,10 +38,12 @@ public class DisplaySearchResultsActivity extends ListActivity {
 	/* Used to display the search results */
 	private ListView listView;
 	/* ArrayList gets populated with restaurant names from API query */
-	private ArrayList<String> destinationNamesArr;
-	private ArrayList<Destination> destinationResults;
+	private ArrayList<String> destinationNamesArr = new ArrayList<String>();
+	private ArrayList<Destination> destinationResults = new ArrayList<Destination>();
+	
 	/* Used to attach an array to the listView */
 	private ArrayAdapter<String> adapter;
+    private final String WS_API_KEY = "ffd1c56f9abcf84872116b4cc2dfcf31";
 
 
 	@Override
@@ -58,6 +66,10 @@ public class DisplaySearchResultsActivity extends ListActivity {
 				.getStringExtra(SearchActivity.SEARCH_RESULTS_MESSAGE);
 		// Call for doInBackground() in MyAsyncTask to be executed
 		new MyAsyncTask(searchType).execute(jsonString);
+		//new MyAsyncTask2().execute();
+		System.out.println("DestinationResults: "+ destinationResults);
+		System.out.println("DestinationResults Size: "+ destinationResults.size());
+		new WalkscoreRequest(destinationResults);
 	}
 
 	/* This thread takes care of parsing the search results for the info we want */
@@ -70,16 +82,20 @@ public class DisplaySearchResultsActivity extends ListActivity {
 
 		@Override
 		protected Void doInBackground(String... args) {
-			destinationNamesArr = new ArrayList<String>();
-			destinationResults = new ArrayList<Destination>();
 
 			/* Info we query */
 			String name;
 			String phoneNumber;
 			String address = null;
 			String price_level;
-			String url;
+			String placeURL;
 			
+			//String walkscoreResponse = null;
+			//String formattedAddress;
+			String longitude;
+			String latitude;
+			Integer walkscore = null;
+			String walkDesc = null;
 			
 
 			if (typeOfSearch.equals("yelp")) {
@@ -118,7 +134,7 @@ public class DisplaySearchResultsActivity extends ListActivity {
 									.getString("name");
 							phoneNumber = (businessList.getJSONObject(i))
 									.getString("display_phone");
-							url = (businessList.getJSONObject(i))
+							placeURL = (businessList.getJSONObject(i))
 									.getString("url");
 
 							// getting location which is super nester
@@ -140,7 +156,7 @@ public class DisplaySearchResultsActivity extends ListActivity {
 
 							destinationNamesArr.add(name);
 							destinationResults.add(new Destination(name,
-									phoneNumber, address, null, url));
+									phoneNumber, address, null, placeURL));
 							/*System.out.println("Adding "
 									+ destinationNamesArr.size()
 									+ "th rest to array: " + name);
@@ -191,14 +207,10 @@ public class DisplaySearchResultsActivity extends ListActivity {
 					} else {
 						// it's ok?
 
-						// Check to see if it is a restaurant or not
-						boolean isRestaurant = false;
-
 						// Get the JSON object named query
 						JSONArray businessList = jsonObject
 								.getJSONArray("results");
 
-						// JSONArray placeType;
 
 						for (int i = 0; i < businessList.length(); i++) {
 							boolean isInList = false;
@@ -220,12 +232,27 @@ public class DisplaySearchResultsActivity extends ListActivity {
 										.getString("vicinity");
 								price_level = (businessList.getJSONObject(i))
 										.getString("price_level");
+								latitude = ((businessList.getJSONObject(i))
+										.getJSONObject("geometry")).getJSONObject("location").getString("lat");
+								longitude = (businessList.getJSONObject(i))
+										.getJSONObject("geometry").getJSONObject("location").getString("lng");
 
-								destinationNamesArr.add(name);
-								destinationResults.add(new Destination(name,
-										null, address, Integer
-												.parseInt(price_level), null));
+														    		
+								//used to have adding to arraylist and names array here
 
+								
+								
+								
+						destinationNamesArr.add(name);
+						destinationResults.add(new Destination(name,
+								null, address, Integer.parseInt(price_level), null, 
+							    Double.parseDouble(longitude), Double.parseDouble(latitude), 
+							    walkscore, walkDesc));
+								
+								
+								
+								
+								
 								/*System.out.println("Adding "
 										+ destinationNamesArr.size()
 										+ "the rest to array: " + name + " at "
@@ -236,6 +263,8 @@ public class DisplaySearchResultsActivity extends ListActivity {
 						/*for (int i = 0; i < destinationNamesArr.size(); i++) {
 							System.out.println(destinationNamesArr.get(i));
 						}*/
+						
+						System.out.println("At the end of first asynctask - size of destResults: " + destinationResults.size());
 					}
 
 				} catch (JSONException e) {
@@ -407,6 +436,190 @@ public class DisplaySearchResultsActivity extends ListActivity {
 		AlertDialog dialog = builder.create();
 		dialog.show();
 	}
+	
+	
+	
+	
+	
+	/* This thread takes care of the Walkscore API request and processing */
+	private class MyAsyncTask2 extends AsyncTask<String, Void, Void> {
+		
+		String walkscoreResponse = "";
+		String formattedAddress;
+		Integer walkscore = null;
+		String walkDesc = null;
+		// Holds Key Value pairs from a JSON source
+		JSONObject jsonObject;
+	
+		@Override
+		protected Void doInBackground(String... args) {
+			
+			//For each place in destinationResults array, try to find it's walkscore
+			for(Destination dest: destinationResults){
+				System.out.println("WalkScore API params: ");
+				System.out.println("Lat: " + dest.getLatitude());
+				System.out.println("Lng: " + dest.getLongitude());
+				System.out.println("Address: " + dest.getAddress());
+				//Format the address param for the Walkscore request
+				formattedAddress = dest.getAddress().replace(" ", "%20");
+				System.out.println("Formatted Address: " + formattedAddress);
+				
+				
+				/*http://transit.walkscore.com/transit/score/?lat=47.6101359&lon=-122.3420567&
+				 * city=Seattle&state=WA&
+				 * wsapikey=ffd1c56f9abcf84872116b4cc2dfcf31*/
+				
+				/* Making request to Walkscore API for walk score information */
+				StringBuilder urlString = new StringBuilder();
+				/*urlString.append("http://api.walkscore.com/score?format=json&");
+		        urlString.append("address=").append(formattedAddress);								
+		        urlString.append("&lat=").append(dest.getLatitude());
+		        urlString.append("&lon=").append(dest.getLongitude());		       
+		        urlString.append("&wsapikey=").append(WS_API_KEY);*/
+				urlString.append("http://www.google.com");
+				
+				
+				
+				
+				
+				/*try something else
+				urlString.append("http://transit.walkscore.com/transit/score/?");
+		        urlString.append("&lat=").append(dest.getLatitude());
+		        urlString.append("&lon=").append(dest.getLongitude());	
+		        urlString.append("&city=").append(dest.getLongitude());
+		        urlString.append("&state=").append(dest.getLongitude());
+		        urlString.append("&wsapikey=").append(WS_API_KEY);
+				try something else
+				*/
+				
+				
+				
+		        
+		        System.out.println("yay:"+urlString.toString());
+
+		        HttpURLConnection urlConnection = null;
+		        URL url = null;
+		        
+		        //try out
+		       //StringBuilder result = new StringBuilder();
+
+		        try
+		        {
+		            url = new URL(urlString.toString());
+		            urlConnection = (HttpURLConnection) url.openConnection();
+		           /* urlConnection.setRequestMethod("GET");
+		            urlConnection.setDoOutput(true);
+		            urlConnection.setDoInput(true);
+		            urlConnection.connect();*/
+		            InputStream inStream = null;
+		           // Thread.sleep(5000);
+		            inStream = urlConnection.getInputStream();
+		            BufferedReader bReader = new BufferedReader(new InputStreamReader(inStream));
+		            String temp = "";
+		            System.out.println("About to take input");
+		            /*while ((temp = bReader.readLine()) != null){
+		            	System.out.println("temp: " +temp);
+		                walkscoreResponse += temp;
+		            	//result.append(temp);
+		            }	*/	
+		            
+		           while((temp = bReader.readLine()) != null) {
+		        	   walkscoreResponse += temp;
+		        	   System.out.println("temp: " + temp);
+		           }
+		           
+		            System.out.println("No input");
+
+		            bReader.close();
+		            inStream.close();
+		            urlConnection.disconnect();
+		        }
+		        catch (Exception e)
+		        {
+		            e.printStackTrace();
+		        }
+							
+		        //System.out.println(walkscoreResponse);
+		        /* End of Walkscore API request */
+		        
+		        /* Process Walkscore response */
+		        
+			    // Get the root JSONObject
+		        try{
+		        	System.out.println("Response: " + walkscoreResponse);
+					jsonObject = new JSONObject(walkscoreResponse);
+					String status = jsonObject.getString("status");
+					
+					if(Integer.parseInt(status) == 1){
+						walkscore = Integer.parseInt(jsonObject.getString("walkscore"));
+						System.out.println(walkscore);
+						walkDesc = jsonObject.getString("description");
+						System.out.println(walkDesc);
+					}
+					else{
+						//handle this instance of lack in walkscore by setting to -1?
+						//print Walkscore error!!
+						System.out.println("No walkscore available for this Adventi destination.");
+					}
+		        }
+		        catch(JSONException e){
+		        	System.out.println("JSONException occurred!!");
+		        	e.printStackTrace(System.out);
+		        }
+				
+			    /* End of processing Walkscore response*/
+				
+			}//end for each destination in results array
+
+			return null;
+
+		}// end doInBackground
+
+		/*
+		 * After the search has occurred and results array is populated, we want
+		 * to display the results using a ListView on the screen. We change the
+		 * color of the text in the TextViews of the the ListView to be black
+		 * because it is white by default
+		 */
+		protected void onPostExecute(Void result) {
+			listView = (ListView) getListView();
+			// listView = (ListView) findViewById(R.id.list);
+
+			// set up ArrayAdapter to use the custom layout for each search
+			// result
+			if(destinationNamesArr.size() == 0){
+				((TextView)findViewById(R.id.searchbypref_term)).setText("No results found.\n" +   "Please check your location services settings or search other related terms.");
+				((TextView)findViewById(R.id.searchbypref_term)).setGravity(0x01);
+				((TextView)findViewById(R.id.searchbypref_term)).setTextSize(25);
+				return;
+			}
+			
+			if (destinationNamesArr != null) {
+				listView.setAdapter(adapter = new ArrayAdapter<String>(
+						getApplicationContext(),
+						android.R.layout.simple_list_item_1, destinationNamesArr) {
+
+					@Override
+					public View getView(int position, View convertView,
+							ViewGroup parent) {
+
+						View view = super
+								.getView(position, convertView, parent);
+						TextView text = (TextView) view
+								.findViewById(android.R.id.text1);
+						text.setTextColor(Color.BLACK);
+
+						return view;
+					}// end getView function
+
+				}); // end setAdapter call
+			}// end if
+		}// end onPostExecute function
+
+	}// end internal MyAsyncTask2 class
+	
+	
+	
 	
 }
 
