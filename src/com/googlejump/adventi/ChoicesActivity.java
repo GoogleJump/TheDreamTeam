@@ -1,5 +1,7 @@
 package com.googlejump.adventi;
 
+import com.googlejump.adventi.models.AdventiUser;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
@@ -12,13 +14,17 @@ import android.content.Intent;
 import android.os.Build;
 
 public class ChoicesActivity extends Activity {
-
+	
+	AdventiUser currentUser;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_options);
 		// Show the Up button in the action bar.
 		setupActionBar();
+		Intent info = getIntent();
+		currentUser = (AdventiUser) info.getSerializableExtra("currentUser");
 		
 		
 		
@@ -26,6 +32,7 @@ public class ChoicesActivity extends Activity {
 		button.setOnClickListener (new View.OnClickListener(){
 		    public void onClick(View v) {
 		    	Intent launchEatSearchAct = new Intent(ChoicesActivity.this, SearchActivity.class);
+		    	launchEatSearchAct.putExtra("currentUser", currentUser);
 				startActivity(launchEatSearchAct);		   
 			}
 		}); 
@@ -33,6 +40,7 @@ public class ChoicesActivity extends Activity {
 		Button button02 = (Button) findViewById(R.id.Option2);
 		button02.setOnClickListener (new View.OnClickListener(){
 		    public void onClick(View v) {
+		    	//launchEatSearchAct.putExtra("currentUser", currentUser);
 		    	setContentView(R.layout.option2);
 		   }
 		}); 
@@ -40,6 +48,7 @@ public class ChoicesActivity extends Activity {
 		Button button01 = (Button) findViewById(R.id.Option3);
 		button01.setOnClickListener (new View.OnClickListener(){
 		    public void onClick(View v) {
+		    	//launchEatSearchAct.putExtra("currentUser", currentUser);
 		    	setContentView(R.layout.option3);
 		   }
 		}); 
@@ -47,6 +56,7 @@ public class ChoicesActivity extends Activity {
 		Button button1 = (Button) findViewById(R.id.Option4);
 		button1.setOnClickListener (new View.OnClickListener(){
 		    public void onClick(View v) {
+		    	//launchEatSearchAct.putExtra("currentUser", currentUser);
 		    	setContentView(R.layout.option4);
 		   }
 		});

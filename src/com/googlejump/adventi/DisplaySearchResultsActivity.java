@@ -17,6 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.googlejump.adventi.models.AdventiUser;
 import com.googlejump.adventi.models.Destination;
 
 import android.os.AsyncTask;
@@ -70,6 +71,7 @@ public class DisplaySearchResultsActivity extends ListActivity implements Locati
 
     private double latitude;
 	private double longitude;
+	AdventiUser currentUser;
 
 	public AtomicInteger variable;
 
@@ -98,6 +100,7 @@ public class DisplaySearchResultsActivity extends ListActivity implements Locati
 		Intent intent = getIntent();
 		String message = intent
 				.getStringExtra(SearchActivity.SEARCH_TERM_MESSAGE);
+		currentUser = (AdventiUser) intent.getSerializableExtra("currentUser");
 		TextView searchByPrefTerm = (TextView) findViewById(R.id.searchbypref_term);
 		searchByPrefTerm.setText("Search results for: \"" + message + " \"");
 
@@ -124,7 +127,8 @@ public class DisplaySearchResultsActivity extends ListActivity implements Locati
 	   longitude = location.getLongitude();
 	   
 	   MarkerOptions mp = new MarkerOptions();
-	   mp.position(new LatLng(location.getLatitude(), location.getLongitude()));
+	   // mp.position(new LatLng(location.getLatitude(), location.getLongitude()));
+	    mp.position(new LatLng(currentUser.getLatitude(), currentUser.getLongitude()));
 	   
 	   mp.title("my position");
 

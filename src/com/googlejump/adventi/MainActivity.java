@@ -1,5 +1,8 @@
 package com.googlejump.adventi;
 
+import com.googlejump.adventi.models.AdventiUser;
+import com.googlejump.adventi.models.AdventiUser.Vehicle;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -8,7 +11,9 @@ import android.view.View;
 import android.widget.Button;
 
 public class MainActivity extends Activity {
+	AdventiUser currentUser = new AdventiUser();
 
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -19,7 +24,9 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
+				currentUser.setMethodOfTransport(Vehicle.CAR);
 				Intent launchAct = new Intent(MainActivity.this, ChoicesActivity.class);
+				launchAct.putExtra("currentUser", currentUser);
 				startActivity(launchAct);
 			}
 		});
@@ -29,7 +36,9 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
+				currentUser.setMethodOfTransport(Vehicle.BICYCLE);
 				Intent launchAct = new Intent(MainActivity.this, ChoicesActivity.class);
+				launchAct.putExtra("currentUser", currentUser);
 				startActivity(launchAct);
 			}
 		});
@@ -39,7 +48,9 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
+				currentUser.setMethodOfTransport(Vehicle.WALK);
 				Intent launchAct = new Intent(MainActivity.this, ChoicesActivity.class);
+				launchAct.putExtra("currentUser", currentUser);
 				startActivity(launchAct);
 			}
 		});
@@ -49,7 +60,9 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
+				currentUser.setMethodOfTransport(Vehicle.BUS);
 				Intent launchAct = new Intent(MainActivity.this, ChoicesActivity.class);
+				launchAct.putExtra("currentUser", currentUser);
 				startActivity(launchAct);
 			}
 		});
