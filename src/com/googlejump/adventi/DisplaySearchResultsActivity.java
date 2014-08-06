@@ -67,7 +67,7 @@ public class DisplaySearchResultsActivity extends ListActivity implements Locati
 	
 	/* Used to attach an array to the listView */
 	private ArrayAdapter<String> adapter;
-    private final String WS_API_KEY = "ffd1c56f9abcf84872116b4cc2dfcf31";
+    private final String WS_API_KEY = "dce91a3aab38261fcc802285cea75e1e";
 
     private double latitude;
 	private double longitude;
@@ -111,9 +111,7 @@ public class DisplaySearchResultsActivity extends ListActivity implements Locati
 		// Call for doInBackground() in MyAsyncTask to be executed
 		new MyAsyncTask(searchType).execute(jsonString);
 		//new MyAsyncTask2().execute();
-		System.out.println("DestinationResults: "+ destinationResults);
-		System.out.println("DestinationResults Size: "+ destinationResults.size());
-		new WalkscoreRequest(destinationResults);
+		new WalkscoreRequest(destinationResults, currentUser.getMethodOfTransport());
 	}
 
 	@Override
@@ -130,7 +128,7 @@ public class DisplaySearchResultsActivity extends ListActivity implements Locati
 	   // mp.position(new LatLng(location.getLatitude(), location.getLongitude()));
 	    mp.position(new LatLng(currentUser.getLatitude(), currentUser.getLongitude()));
 	   
-	   mp.title("my position");
+	   mp.title("my location");
 
 	   map.addMarker(mp);
 	   

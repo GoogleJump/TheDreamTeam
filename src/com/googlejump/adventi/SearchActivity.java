@@ -127,8 +127,8 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 		        //urlString.append("&name=").append(params[1]);
 		        urlString.append("&rankby=").append("distance");
 		        urlString.append("&keyword=").append(args[0]);
-		        urlString.append("&minprice=").append("0");
-		        urlString.append("&maxprice=").append("3");
+		       // urlString.append("&minprice=").append("0");
+		       // urlString.append("&maxprice=").append("3");
 		        urlString.append("&key=").append("AIzaSyA63EmMpjRs3wJd_9SU-QsuCw-C7AKA5Qs");
 		        
 		        HttpURLConnection urlConnection = null;

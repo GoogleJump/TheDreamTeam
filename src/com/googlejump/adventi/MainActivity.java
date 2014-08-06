@@ -5,13 +5,16 @@ import com.googlejump.adventi.models.AdventiUser.Vehicle;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	AdventiUser currentUser = new AdventiUser();
+	Context currentAct = this;
 
 	
 	@Override
@@ -25,6 +28,8 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				currentUser.setMethodOfTransport(Vehicle.CAR);
+				System.out.println("Car is selected");
+				Toast.makeText(currentAct, "Car mode of transportation set", Toast.LENGTH_SHORT ).show();
 				Intent launchAct = new Intent(MainActivity.this, ChoicesActivity.class);
 				launchAct.putExtra("currentUser", currentUser);
 				startActivity(launchAct);
@@ -37,6 +42,8 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				currentUser.setMethodOfTransport(Vehicle.BICYCLE);
+				System.out.println("Bicycle is selected");
+				Toast.makeText(currentAct, "Bicycle mode of transportation set", Toast.LENGTH_SHORT ).show();
 				Intent launchAct = new Intent(MainActivity.this, ChoicesActivity.class);
 				launchAct.putExtra("currentUser", currentUser);
 				startActivity(launchAct);
@@ -49,6 +56,8 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				currentUser.setMethodOfTransport(Vehicle.WALK);
+				System.out.println("Walk is selected");
+				Toast.makeText(currentAct, "Walk mode of transportation set", Toast.LENGTH_SHORT ).show();
 				Intent launchAct = new Intent(MainActivity.this, ChoicesActivity.class);
 				launchAct.putExtra("currentUser", currentUser);
 				startActivity(launchAct);
@@ -61,6 +70,8 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				currentUser.setMethodOfTransport(Vehicle.BUS);
+				System.out.println("Bus is selected");
+				Toast.makeText(currentAct, "Bus mode of transportation set", Toast.LENGTH_SHORT ).show();
 				Intent launchAct = new Intent(MainActivity.this, ChoicesActivity.class);
 				launchAct.putExtra("currentUser", currentUser);
 				startActivity(launchAct);
