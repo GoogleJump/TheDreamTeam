@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1.04"
         android:height="48dp"
+        android:onClick="displayFood"
         android:background="@android:color/transparent"        
         android:paddingTop="10dp" />
 

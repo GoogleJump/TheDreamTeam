@@ -32,8 +32,10 @@ public class ChoicesActivity extends Activity {
 		button.setOnClickListener (new View.OnClickListener(){
 		    public void onClick(View v) {
 		    	Intent launchEatSearchAct = new Intent(ChoicesActivity.this, SearchActivity.class);
+
 		    	launchEatSearchAct.putExtra("currentUser", currentUser);
-				startActivity(launchEatSearchAct);		   
+		    	MainActivity.searchCategory = 1;
+				startActivity(launchEatSearchAct);		
 			}
 		}); 
 
@@ -41,7 +43,12 @@ public class ChoicesActivity extends Activity {
 		button02.setOnClickListener (new View.OnClickListener(){
 		    public void onClick(View v) {
 		    	//launchEatSearchAct.putExtra("currentUser", currentUser);
-		    	setContentView(R.layout.option2);
+		    	//setContentView(R.layout.option2);
+		    	Intent launchEatSearchAct = new Intent(ChoicesActivity.this, SearchActivity.class);
+
+		    	launchEatSearchAct.putExtra("currentUser", currentUser);
+		    	MainActivity.searchCategory = 2;
+				startActivity(launchEatSearchAct);
 		   }
 		}); 
 
@@ -49,7 +56,12 @@ public class ChoicesActivity extends Activity {
 		button01.setOnClickListener (new View.OnClickListener(){
 		    public void onClick(View v) {
 		    	//launchEatSearchAct.putExtra("currentUser", currentUser);
-		    	setContentView(R.layout.option3);
+		    	//setContentView(R.layout.option3);
+		    	Intent launchEatSearchAct = new Intent(ChoicesActivity.this, SearchActivity.class);
+
+		    	launchEatSearchAct.putExtra("currentUser", currentUser);
+		    	MainActivity.searchCategory = 3;
+				startActivity(launchEatSearchAct);
 		   }
 		}); 
 
@@ -57,7 +69,12 @@ public class ChoicesActivity extends Activity {
 		button1.setOnClickListener (new View.OnClickListener(){
 		    public void onClick(View v) {
 		    	//launchEatSearchAct.putExtra("currentUser", currentUser);
-		    	setContentView(R.layout.option4);
+		    	//setContentView(R.layout.option4);
+		    	Intent launchEatSearchAct = new Intent(ChoicesActivity.this, SearchActivity.class);
+
+		    	launchEatSearchAct.putExtra("currentUser", currentUser);
+		    	MainActivity.searchCategory = 4;
+				startActivity(launchEatSearchAct);
 		   }
 		});
 		

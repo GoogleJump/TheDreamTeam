@@ -13,6 +13,9 @@ import android.widget.Button;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
+	
+	public static boolean refine;
+	public static int searchCategory;
 	AdventiUser currentUser = new AdventiUser();
 	Context currentAct = this;
 
@@ -22,6 +25,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
+		refine = false;
 		Button button1 = (Button) findViewById(R.id.button1);
 		button1.setOnClickListener( new View.OnClickListener() {
 			
