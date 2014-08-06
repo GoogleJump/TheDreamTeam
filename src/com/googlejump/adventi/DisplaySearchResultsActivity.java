@@ -139,8 +139,8 @@ public class DisplaySearchResultsActivity extends ListActivity implements Locati
 	   //mp.position(new LatLng(location.getLatitude(), location.getLongitude()));
 	   mp.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
 
-	   // mp.position(new LatLng(location.getLatitude(), location.getLongitude()));
-	   mp.position(new LatLng(currentUser.getLatitude(), currentUser.getLongitude()));
+	   mp.position(new LatLng(location.getLatitude(), location.getLongitude()));
+	   //mp.position(new LatLng(currentUser.getLatitude(), currentUser.getLongitude()));
 	   
 	   mp.title("my position");
 

@@ -55,8 +55,8 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 		mCurrentLocationClient = new LocationClient(this, this, this);	
 		//mCurrentLocationClient.connect();	
 		//new MyAsyncTask("google").execute("food",null, null);
-		Intent info = getIntent();
-		currentUser = (AdventiUser) info.getSerializableExtra("currentUser");
+		//Intent info = getIntent();
+		//currentUser = (AdventiUser) info.getSerializableExtra("currentUser");
 
 	}
 	
@@ -67,6 +67,8 @@ GooglePlayServicesClient.OnConnectionFailedListener {
     protected void onStart() {
 		super.onStart();
         // Connect the client.
+		Intent info = getIntent();
+		currentUser = (AdventiUser) info.getSerializableExtra("currentUser");
 		mCurrentLocationClient.connect();	
 		//new MyAsyncTask("google").execute("food",null, null);
 		
@@ -76,7 +78,18 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 	public void onConnected(Bundle arg0) {
 	    System.out.println("Connected ...");
 	    if (MainActivity.refine == false) {
-	    	new MyAsyncTask("google").execute("food",null, null);
+	    	if (MainActivity.searchCategory == 1) {
+	    		new MyAsyncTask("google").execute("food",null, null);
+	    	}
+	    	else if (MainActivity.searchCategory == 2) {
+	    		new MyAsyncTask("google").execute("study",null, null);
+	    	}
+	    	else if (MainActivity.searchCategory == 3) {
+	    		new MyAsyncTask("google").execute("malls",null, null);
+	    	}
+	    	else if (MainActivity.searchCategory == 4) {
+	    		new MyAsyncTask("google").execute("park",null, null);
+	    	}
 	    }
 
 	}
@@ -115,8 +128,8 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 		    Location loc = mCurrentLocationClient.getLastLocation();
 		    double latitude = loc.getLatitude();
 		    double longitude = loc.getLongitude();
-		    currentUser.setLatitude(latitude);
-		    currentUser.setLongitude(longitude);
+		    //currentUser.setLatitude(latitude);
+		    //currentUser.setLongitude(longitude);
 			System.out.println("Location is: " + loc);
 			System.out.println("Latitude is: " + latitude);
 			System.out.println("Longitude: " + longitude);

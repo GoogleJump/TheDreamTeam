@@ -13,6 +13,7 @@ import android.widget.Button;
 public class MainActivity extends Activity {
 	
 	public static boolean refine;
+	public static int searchCategory;
 	AdventiUser currentUser = new AdventiUser();
 
 	
