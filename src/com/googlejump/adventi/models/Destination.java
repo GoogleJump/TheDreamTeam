@@ -104,7 +104,7 @@ public class Destination {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-
+	
 	public Integer getPriceLevel() {
 		return priceLevel;
 	}

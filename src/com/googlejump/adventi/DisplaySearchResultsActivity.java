@@ -65,6 +65,7 @@ public class DisplaySearchResultsActivity extends ListActivity implements Locati
 	private ListView listView;
 	/* ArrayList gets populated with restaurant names from API query */
 	private ArrayList<String> destinationNamesArr = new ArrayList<String>();
+	private ArrayList<String> displayNames = new ArrayList<String>();
 	private ArrayList<Destination> destinationResults = new ArrayList<Destination>();
 	
 	/* Used to attach an array to the listView */
@@ -427,17 +428,26 @@ public class DisplaySearchResultsActivity extends ListActivity implements Locati
 
 			// set up ArrayAdapter to use the custom layout for each search
 			// result
-			if(destinationNamesArr.size() == 0){
+			if(destinationResults.size() == 0){
 				((TextView)findViewById(R.id.searchbypref_term)).setText("No results found.\n" +   "Please check your location services settings or search other related terms.");
 				((TextView)findViewById(R.id.searchbypref_term)).setGravity(0x01);
 				((TextView)findViewById(R.id.searchbypref_term)).setTextSize(25);
 				return;
 			}
 			
-			if (destinationNamesArr != null) {
+			if (destinationResults != null) {
+				for (int j=0; j < destinationResults.size(); j++) {
+					String elem;
+					elem = destinationResults.get(j).getName();
+					elem += " - ";
+					elem += destinationResults.get(j).getWalkScore();
+					System.out.println(elem);
+					displayNames.add(elem);
+				}
+				
 				listView.setAdapter(adapter = new ArrayAdapter<String>(
 						getApplicationContext(),
-						android.R.layout.simple_list_item_1, destinationNamesArr) {
+						android.R.layout.simple_list_item_1, displayNames) {
 
 					@Override
 					public View getView(int position, View convertView,
