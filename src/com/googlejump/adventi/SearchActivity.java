@@ -9,6 +9,7 @@ import java.net.URL;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.location.LocationClient;
+import com.googlejump.adventi.models.AdventiUser;
 
 import android.location.Location;
 import android.os.AsyncTask;
@@ -35,6 +36,9 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 		public final static String SEARCH_TERM_MESSAGE = "com.example.adventi.SEARCH_TERM";
 		public final static String SEARCH_TYPE = "com.example.adventi.SEARCH_TYPE";
 	    public final static String SEARCH_RESULTS_MESSAGE = "com.example.adventi.SEARCH_RESULTS";
+	    AdventiUser currentUser;
+	    
+		
 	    
 
 	
@@ -51,6 +55,8 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 		mCurrentLocationClient = new LocationClient(this, this, this);	
 		//mCurrentLocationClient.connect();	
 		//new MyAsyncTask("google").execute("food",null, null);
+		Intent info = getIntent();
+		currentUser = (AdventiUser) info.getSerializableExtra("currentUser");
 
 	}
 	
@@ -109,6 +115,8 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 		    Location loc = mCurrentLocationClient.getLastLocation();
 		    double latitude = loc.getLatitude();
 		    double longitude = loc.getLongitude();
+		    currentUser.setLatitude(latitude);
+		    currentUser.setLongitude(longitude);
 			System.out.println("Location is: " + loc);
 			System.out.println("Latitude is: " + latitude);
 			System.out.println("Longitude: " + longitude);
@@ -204,6 +212,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
     	intent.putExtra(SEARCH_TERM_MESSAGE, searchTerm);
     	intent.putExtra(SEARCH_TYPE, searchType);
     	intent.putExtra(SEARCH_RESULTS_MESSAGE, jsonResult);
+    	intent.putExtra("currentUser", currentUser);
     	startActivity(intent);	
 	}
 	

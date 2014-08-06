@@ -1,36 +1,38 @@
-<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/GridLayout1"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/letsgo"
-    android:columnCount="2"
-    android:orientation="horizontal" >
-
-    <EditText
-        android:id="@+id/edit_foodsearch"
-        android:layout_width="50dp"
-        android:layout_gravity="fill_horizontal"
-        android:ems="10"
-        android:hint="@string/edit_foodsearch"
-        android:textColor="#ffffff"
-        android:textSize="20sp" >
-
-        <requestFocus />
-    </EditText>
+    android:layout_height="match_parent">
+    
+    <TableLayout
+        android:id="@+id/search_title_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/letsgo"
+        android:shrinkColumns="*"
+        android:stretchColumns="*" >
 
     <!-- Row 1 with single column -->
 
-    <Space
-        android:layout_column="1"
-        android:layout_gravity="fill_vertical"
-        android:layout_row="1" />
+   <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop = "50dp"
+    android:orientation="horizontal" >
 
-    <Button
-        android:layout_width="match_parent"
+    <EditText android:id="@+id/edit_foodsearch"
+        android:layout_weight="1"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:layout_column="0"
-        android:layout_gravity="left|fill_vertical"
-        android:layout_row="1"
-        android:onClick="sendPriceMessage" />
+        android:hint="@string/edit_foodsearch"
+        />
 
-</GridLayout>
+</LinearLayout>
+
+   <Button
+       android:layout_width="wrap_content"
+       android:layout_height="match_parent"
+       android:background="@android:color/transparent"        
+       android:onClick="sendPriceMessage" />
+   
+ </TableLayout>
+</RelativeLayout>
