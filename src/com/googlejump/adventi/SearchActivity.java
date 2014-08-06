@@ -41,11 +41,16 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_search);
+		if (MainActivity.refine == true){
+			setContentView(R.layout.activity_search);
+		}
+		//setContentView(R.layout.activity_search);
 		// Show the Up button in the action bar.
 		setupActionBar();
 		//Set up in order to get user's location
 		mCurrentLocationClient = new LocationClient(this, this, this);	
+		//mCurrentLocationClient.connect();	
+		//new MyAsyncTask("google").execute("food",null, null);
 
 	}
 	
@@ -57,7 +62,17 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 		super.onStart();
         // Connect the client.
 		mCurrentLocationClient.connect();	
+		//new MyAsyncTask("google").execute("food",null, null);
 		
+	}
+	
+	@Override
+	public void onConnected(Bundle arg0) {
+	    System.out.println("Connected ...");
+	    if (MainActivity.refine == false) {
+	    	new MyAsyncTask("google").execute("food",null, null);
+	    }
+
 	}
 	
 	/*
@@ -76,7 +91,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 	 * If search option is by price range, the Google Places API is used
 	 *  and results are returned based on the price_levels of restaurants.
 	 */
-	private class MyAsyncTask extends AsyncTask<String,Void,Void>{
+	public class MyAsyncTask extends AsyncTask<String,Void,Void>{
 		
 		String typeOfSearch;
 		
@@ -148,7 +163,8 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 		        }
 		        catch (Exception e)
 		        {
-		            e.printStackTrace();
+		            System.out.println("error");
+		        	e.printStackTrace();
 		        }
 				
 			}//end else
@@ -232,13 +248,13 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 		Toast.makeText(this, "Please turn on location or GPS services.", Toast.LENGTH_LONG).show();
 		
 	}
-
+/*
 	@Override
 	public void onConnected(Bundle arg0) {
 		// TODO Auto-generated method stub
 		
 	}
-
+*/
 	@Override
 	public void onDisconnected() {
 		// TODO Auto-generated method stub

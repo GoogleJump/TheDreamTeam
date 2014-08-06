@@ -26,7 +26,9 @@ public class ChoicesActivity extends Activity {
 		button.setOnClickListener (new View.OnClickListener(){
 		    public void onClick(View v) {
 		    	Intent launchEatSearchAct = new Intent(ChoicesActivity.this, SearchActivity.class);
-				startActivity(launchEatSearchAct);		   
+				startActivity(launchEatSearchAct);
+		    	//Intent launchResults = new Intent(ChoicesActivity.this, DisplaySearchResultsActivity.class);
+		    	//startActivity(launchResults);
 			}
 		}); 
 

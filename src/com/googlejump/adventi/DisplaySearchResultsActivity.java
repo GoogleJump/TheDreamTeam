@@ -17,6 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.googlejump.adventi.SearchActivity.MyAsyncTask;
 import com.googlejump.adventi.models.Destination;
 
 import android.os.AsyncTask;
@@ -49,6 +50,7 @@ import android.os.Bundle;
 
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -72,6 +74,8 @@ public class DisplaySearchResultsActivity extends ListActivity implements Locati
 	private double longitude;
 
 	public AtomicInteger variable;
+	
+	private SearchActivity searcher;
 
 	//map
 	GoogleMap map;
@@ -83,6 +87,8 @@ public class DisplaySearchResultsActivity extends ListActivity implements Locati
 
 		LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0,this);
+		
+		searcher = new SearchActivity();
 		
 		//show map
 		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
@@ -106,7 +112,9 @@ public class DisplaySearchResultsActivity extends ListActivity implements Locati
 		String jsonString = intent
 				.getStringExtra(SearchActivity.SEARCH_RESULTS_MESSAGE);
 		// Call for doInBackground() in MyAsyncTask to be executed
-		new MyAsyncTask(searchType).execute(jsonString);
+		//new MyAsyncTask(searchType).execute(jsonString);
+		//searcher.new MyAsyncTask("google").execute("food",null, null);
+		new MyAsyncTask3(searchType).execute(jsonString);
 		//new MyAsyncTask2().execute();
 		System.out.println("DestinationResults: "+ destinationResults);
 		System.out.println("DestinationResults Size: "+ destinationResults.size());
@@ -125,7 +133,7 @@ public class DisplaySearchResultsActivity extends ListActivity implements Locati
 	   
 	   MarkerOptions mp = new MarkerOptions();
 	   mp.position(new LatLng(location.getLatitude(), location.getLongitude()));
-	   
+	   mp.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
 	   mp.title("my position");
 
 	   map.addMarker(mp);
@@ -138,9 +146,15 @@ public class DisplaySearchResultsActivity extends ListActivity implements Locati
 	   placeMarkers(destinationResults);
 	   
 	   map.animateCamera(CameraUpdateFactory.newLatLngZoom(
-	    new LatLng(location.getLatitude(), location.getLongitude()), 16));
+	    new LatLng(location.getLatitude(), location.getLongitude()), 14));
 	  }
-
+	
+	public void changeRefine(View view) {
+		MainActivity.refine = true;
+		Intent launchEatSearchAct = new Intent(DisplaySearchResultsActivity.this, SearchActivity.class);
+		startActivity(launchEatSearchAct);
+	}
+	
 	 public void placeMarkers(ArrayList<Destination> dest) {
 		 Geocoder coder = new Geocoder(this);
 		 List<Address> address;
@@ -161,7 +175,7 @@ public class DisplaySearchResultsActivity extends ListActivity implements Locati
 				e.printStackTrace();
 			 }
 			 
-
+			 mp.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
 			 map.addMarker(mp);
 			 System.out.println("got here");
 			 
@@ -187,10 +201,10 @@ public class DisplaySearchResultsActivity extends ListActivity implements Locati
 	  }
 
 	/* This thread takes care of parsing the search results for the info we want */
-	private class MyAsyncTask extends AsyncTask<String, Void, Void> {
+	private class MyAsyncTask3 extends AsyncTask<String, Void, Void> {
 		String typeOfSearch;
 
-		public MyAsyncTask(String searchType) {
+		public MyAsyncTask3(String searchType) {
 			typeOfSearch = searchType;
 		}
 
