@@ -20,6 +20,7 @@ import org.json.JSONObject;
 import com.googlejump.adventi.SearchActivity.MyAsyncTask;
 import com.googlejump.adventi.models.AdventiUser;
 import com.googlejump.adventi.models.Destination;
+import com.googlejump.adventi.models.AdventiUser.Vehicle;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -109,7 +110,12 @@ public class DisplaySearchResultsActivity extends ListActivity implements Locati
 				.getStringExtra(SearchActivity.SEARCH_TERM_MESSAGE);
 		currentUser = (AdventiUser) intent.getSerializableExtra("currentUser");
 		TextView searchByPrefTerm = (TextView) findViewById(R.id.searchbypref_term);
-		searchByPrefTerm.setText("Search results for: \"" + message + " \"");
+		if(!(currentUser.getMethodOfTransport() == Vehicle.CAR)){
+			searchByPrefTerm.setText("Nearby Adventi destinations + accessibility rating: ");
+		}
+		else{
+			searchByPrefTerm.setText("Nearby Adventi destinations: ");
+		}
 
 		// Change title of view based on type of search
 		String searchType = intent.getStringExtra(SearchActivity.SEARCH_TYPE);
@@ -120,7 +126,19 @@ public class DisplaySearchResultsActivity extends ListActivity implements Locati
 		//searcher.new MyAsyncTask("google").execute("food",null, null);
 		new MyAsyncTask3(searchType).execute(jsonString);
 		//new MyAsyncTask2().execute();
-		new WalkscoreRequest(destinationResults, currentUser.getMethodOfTransport());
+		/*new WalkscoreRequest(destinationResults, currentUser.getMethodOfTransport());
+		if (destinationResults != null) {
+			for (int j=0; j < destinationResults.size(); j++) {
+				String elem;
+				elem = destinationResults.get(j).getName();
+				if(destinationResults.get(j).getWalkScore() == null){
+					elem += " - ";
+					elem += destinationResults.get(j).getWalkScore();
+				}
+				System.out.println(elem);
+				displayNames.add(elem);
+			}
+		}// end if */
 	}
 
 	@Override
@@ -365,8 +383,9 @@ public class DisplaySearchResultsActivity extends ListActivity implements Locati
 										.getString("name");
 								address = (businessList.getJSONObject(i))
 										.getString("vicinity");
-								price_level = (businessList.getJSONObject(i))
-										.getString("price_level");
+								/*price_level = (businessList.getJSONObject(i))
+										.getString("price_level");*/
+								price_level = Integer.toString(0);
 								latitude = ((businessList.getJSONObject(i))
 										.getJSONObject("geometry")).getJSONObject("location").getString("lat");
 								longitude = (businessList.getJSONObject(i))
@@ -433,13 +452,23 @@ public class DisplaySearchResultsActivity extends ListActivity implements Locati
 				return;
 			}
 			
+			new WalkscoreRequest(destinationResults, currentUser.getMethodOfTransport());
+			try {
+				Thread.sleep(6000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			if (destinationResults != null) {
 				for (int j=0; j < destinationResults.size(); j++) {
 					String elem;
 					elem = destinationResults.get(j).getName();
-					elem += " - ";
-					elem += destinationResults.get(j).getWalkScore();
-					System.out.println(elem);
+					if(destinationResults.get(j).getWalkScore() != null){
+						elem += " - ";
+						elem += destinationResults.get(j).getWalkScore();
+						System.out.println(elem);
+					}
 					displayNames.add(elem);
 				}
 				

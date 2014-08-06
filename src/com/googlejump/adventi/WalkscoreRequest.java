@@ -17,7 +17,9 @@ import com.googlejump.adventi.models.AdventiUser.Vehicle;
 
 public class WalkscoreRequest {
 	ArrayList<Destination> destResults;
-    private final String WS_API_KEY = "ffd1c56f9abcf84872116b4cc2dfcf31";
+    //private final String WS_API_KEY = "ffd1c56f9abcf84872116b4cc2dfcf31";
+    private final String WS_API_KEY = "dce91a3aab38261fcc802285cea75e1e";
+    
 
 	
 	public WalkscoreRequest(ArrayList<Destination> destinationResults, AdventiUser.Vehicle mode){
@@ -80,10 +82,10 @@ public class WalkscoreRequest {
 			        urlString.append("&wsapikey=").append(WS_API_KEY);
 				}
 				else if(methodOfTransport == "bus"){
-					urlString.append("http://transit.walkscore.com/transit/score?");
+					urlString.append("http://transit.walkscore.com/transit/score/?");
 					urlString.append("&lat=").append(dest.getLatitude());
 			        urlString.append("&lon=").append(dest.getLongitude());
-			        urlString.append("&city=").append("San%20Diego");
+			        urlString.append("&city=").append("Mountain%20View");
 			        urlString.append("&state=").append("CA");
 			        urlString.append("&wsapikey=").append(WS_API_KEY);
 				}
@@ -137,28 +139,39 @@ public class WalkscoreRequest {
 		        try{
 		        	System.out.println("Response: " + walkscoreResponse);
 					jsonObject = new JSONObject(walkscoreResponse);
-					String status = jsonObject.getString("status");
 					
-					if(Integer.parseInt(status) == 1){
+						
+						
 						if(methodOfTransport == "walk"){
-							walkscore = Integer.parseInt(jsonObject.getString("walkscore"));
+							String status = jsonObject.getString("status");
+							if(Integer.parseInt(status) == 1){
+								walkscore = Integer.parseInt(jsonObject.getString("walkscore"));
+								dest.setWalkScore(walkscore);
+								System.out.println(walkscore);
+								walkDesc = jsonObject.getString("description");
+								dest.setWalkDesc(walkDesc);
+								System.out.println(walkDesc);
+							}
+							else{
+								//handle this instance of lack in walkscore by setting to -1?
+								//print Walkscore error!!
+								System.out.println("No walkscore available for this Adventi destination.");
+			
+							}	
 						}
+						
+						
 						if(methodOfTransport == "bus"){
 							//only other option here should be bus
 							walkscore = Integer.parseInt(jsonObject.getString("transit_score"));
+						
+							dest.setWalkScore(walkscore);
+							System.out.println(walkscore);
+							walkDesc = jsonObject.getString("description");
+							dest.setWalkDesc(walkDesc);
+							System.out.println(walkDesc);
 						}
-						dest.setWalkScore(walkscore);
-						System.out.println(walkscore);
-						walkDesc = jsonObject.getString("description");
-						dest.setWalkDesc(walkDesc);
-						System.out.println(walkDesc);
-					}
-					else{
-						//handle this instance of lack in walkscore by setting to -1?
-						//print Walkscore error!!
-						System.out.println("No walkscore available for this Adventi destination.");
-					}
-		        }
+					}					
 		        catch(JSONException e){
 		        	System.out.println("JSONException occurred!!");
 		        	e.printStackTrace(System.out);
